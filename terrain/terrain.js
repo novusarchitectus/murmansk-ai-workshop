@@ -7,7 +7,7 @@ const meters=n=>fl(n)+" м";
 const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const dark="#173750",blue="#176ab0";
 let step=0, measuring=false, visited=new Set();
-function svgText(x,y,t,attrs=""){return '<text x="'+x+'" y="'+y+'" font-family="Segoe UI,Arial,sans-serif" font-size="14" fill="'+dark+'" '+attrs+'>'+t+'</text>';}
+function svgText(x,y,t,attrs=""){return '<text x="'+x+'" y="'+y+'" font-family="Onest,Segoe UI,sans-serif" font-size="14" fill="'+dark+'" '+attrs+'>'+t+'</text>';}
 function project(c,r,model){
   if(!model) return [96+439*c/(cols-1),16+317*r/(rows-1)];
   const x=c/(cols-1), y=r/(rows-1);
@@ -43,7 +43,7 @@ function mark(name,model){
   (!set?'<circle class="pulsing" r="16" fill="#4ea8e8"/>':'')+
   '<circle r="9.5" fill="white" stroke="'+blue+'" stroke-width="1.8"/><circle r="4.3" fill="'+blue+'"/>'+
   '<rect x="'+bx+'" y="-26" width="'+ww+'" height="22" rx="3" fill="'+dark+'"/>'+
-  '<text x="'+(bx+ww/2)+'" y="-10.5" font-family="Segoe UI,Arial,sans-serif" font-size="13" fill="white" font-weight="600" text-anchor="middle">'+label+'</text></g>';
+  '<text x="'+(bx+ww/2)+'" y="-10.5" font-family="Onest,Segoe UI,sans-serif" font-size="13" fill="white" font-weight="600" text-anchor="middle">'+label+'</text></g>';
 }
 const cursor='<g id="mouse" class="cursor" aria-hidden="true"><path d="M0 0 L2 21 L7 15 L12 24 L16 22 L11 13 L19 12 Z" fill="#172e45" stroke="white" stroke-width="1.4"/></g>';
 function place(name,model=false){
@@ -85,3 +85,17 @@ $("action").addEventListener("click",async()=>{
  for(const key of ["A","B"]){if(!visited.has(key))await read(key);}
 });
 draw();
+
+// A wheel event inside an embedded document never bubbles into the slide deck.
+if (parent !== window) {
+  document.addEventListener('wheel', event => {
+    if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1;
+    const delta = event.deltaY * scale;
+    const panel = event.target.closest('aside');
+    if (panel && ((delta < 0 && panel.scrollTop > 1) ||
+        (delta > 0 && panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1))) return;
+    event.preventDefault();
+    parent.postMessage({type:'terrain-scroll', delta}, location.protocol === 'file:' ? '*' : location.origin);
+  }, {passive:false});
+}

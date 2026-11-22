@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.0864729,
+          68.9899145
+        ]
+      },
+      "properties": {
+        "name": "A",
+        "east_m": 503460.0,
+        "north_m": 7653240.0,
+        "z_m": 97.501
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.1007147,
+          68.9890996
+        ]
+      },
+      "properties": {
+        "name": "B",
+        "east_m": 504030.0,
+        "north_m": 7653150.0,
+        "z_m": 121.252
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "Семёновское озеро, Мурманск. Учебный фрагмент DSM",
+  "prepared": "2026-11-22",
+  "source": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N68_00_E033_00_DEM/Copernicus_DSM_COG_10_N68_00_E033_00_DEM.tif",
+  "source_sha256": "c8912c03ef3370906ec26a2ce17ca658f823bdf50c0f70e6da09154c61ccb73f",
+  "source_catalog": "https://copernicus-dem-30m.s3.amazonaws.com/readme.html",
+  "product": "Copernicus DEM GLO-30 Public; AWS COG distribution",
+  "source_acquisition": "Основная съёмка TanDEM-X в 2011-2015, дата конкретного пикселя не установлена.",
+  "horizontal_crs": "EPSG:32636",
+  "vertical_reference": "EGM2008, metres",
+  "bounds": [
+    503025,
+    7652955,
+    504135,
+    7653765
+  ],
+  "dataset_origin": "North-west corner, 503025 E, 7653765 N",
+  "shape_rows_cols": [
+    27,
+    37
+  ],
+  "spacing_m": 30,
+  "source_native_spacing_degrees": [
+    0.0005555555555555556,
+    0.0002777777777777778
+  ],
+  "resampling": "Nearest neighbour from WGS84 source. GeoTIFF preserves float32; CSV/JS rounded to 0.001 m for exchange, which is not measurement accuracy.",
+  "csv_local_origin": [
+    503040,
+    7652970
+  ],
+  "csv_axis": "X = E - 503040; Y = N - 7652970; Z unchanged (EGM2008), all units metres; no header",
+  "checkpoints": {
+    "A": {
+      "col": 14,
+      "row": 17,
+      "e": 503460.0,
+      "n": 7653240.0,
+      "lon": 33.0864729,
+      "lat": 68.9899145,
+      "z": 97.501,
+      "x": 420.0,
+      "y": 270.0
+    },
+    "B": {
+      "col": 33,
+      "row": 20,
+      "e": 504030.0,
+      "n": 7653150.0,
+      "lon": 33.1007147,
+      "lat": 68.9890996,
+      "z": 121.252,
+      "x": 990.0,
+      "y": 180.0
+    }
+  },
+  "credit": "produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved",
+  "license": "https://dataspace.copernicus.eu/sites/default/files/media/files/2025-06/copernicus_contributing_mission_data_access_v2_cop_dem_licenses.pdf",
+  "doi": "https://doi.org/10.5270/ESA-c5d3d65",
+  "city": "https://www.citymurmansk.ru/news/?newsid=9988&page=1864",
+  "location": "https://rio.ksc.ru/data/documents/37_fns_20.pdf"
+}

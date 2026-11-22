@@ -1,13 +1,8 @@
 const $ = id => document.getElementById(id);
 const slides = [...document.querySelectorAll('.slide')];
-const names = ['Мурманск', 'Север как Другой', 'Глобальная деревня', 'Как удержать кадр', 'Город со стороны воды', 'Два исходника', 'Сравнение у причала', 'Рельеф в QGIS', 'Подключение программ', 'Материалы'];
+const names = slides.map(slide => slide.querySelector('h1,h2').textContent.trim().replace(/\.$/, ''));
 const toc = $('toc'), viewer = $('viewer');
 let active = -1, pictures = [], pictureIndex = 0;
-const local = ['localhost','127.0.0.1'].includes(location.hostname) || location.protocol === 'file:';
-if (local && !location.search.includes('public')) {
-  const sheet=document.createElement('link'); sheet.rel='stylesheet'; sheet.href='../preview-fonts/fonts.css';
-  sheet.onload=()=>{document.documentElement.style.setProperty('--display','"TT rehearsal",Manrope,sans-serif');}; document.head.append(sheet);
-}
 function show(n, changeHash=true) {
  n=Math.min(slides.length-1, Math.max(0,n)); if(n===active)return;
  active=n; slides.forEach((s,i)=>{s.classList.toggle('on',i===n);if(i===n)s.scrollTop=0;});
@@ -31,14 +26,32 @@ document.addEventListener('keydown',e=>{
  if(e.key in off || e.key==='Home'||e.key==='End'){e.preventDefault();show(e.key==='Home'?0:e.key==='End'?slides.length-1:active+off[e.key]);}
 });
 let lastWheel=0,scrollAmount=0,locked=false;
+function advanceByWheel(d) {
+ const now=performance.now();
+ if(now-lastWheel>170){scrollAmount=0;locked=false;}lastWheel=now;
+ if(locked)return;if(Math.sign(d)!==Math.sign(scrollAmount))scrollAmount=0;scrollAmount+=d;
+ if(Math.abs(scrollAmount)>45){show(active+Math.sign(d));locked=true;scrollAmount=0;}
+}
 document.addEventListener('wheel',e=>{
  if(viewer.open||toc.open||e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
- const d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1),now=performance.now();
- if(now-lastWheel>170){scrollAmount=0;locked=false;}lastWheel=now;
+ const d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
  for(let node=e.target;node&&node!==document.body;node=node.parentElement){if(node.scrollHeight>node.clientHeight+3 && ['auto','scroll'].includes(getComputedStyle(node).overflowY)&&((d>0&&node.scrollTop+node.clientHeight<node.scrollHeight-3)||(d<0&&node.scrollTop>2)))return;}
- e.preventDefault();if(locked)return;if(Math.sign(d)!==Math.sign(scrollAmount))scrollAmount=0;scrollAmount+=d;
- if(Math.abs(scrollAmount)>45){show(active+Math.sign(d));locked=true;scrollAmount=0;}
+ e.preventDefault();advanceByWheel(d);
 },{passive:false});
+const reliefSlide = $('relief');
+const terrainFrame = reliefSlide.querySelector('iframe');
+window.addEventListener('message', event => {
+ if (event.source !== terrainFrame.contentWindow || event.origin !== location.origin ||
+     slides[active] !== reliefSlide || toc.open || viewer.open) return;
+ if (event.data?.type !== 'terrain-scroll' || !Number.isFinite(event.data.delta)) return;
+ const delta = event.data.delta;
+ if ((delta > 0 && reliefSlide.scrollTop + reliefSlide.clientHeight < reliefSlide.scrollHeight - 2) ||
+     (delta < 0 && reliefSlide.scrollTop > 2)) {
+   reliefSlide.scrollTop += delta;
+   return;
+ }
+ advanceByWheel(delta);
+});
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n;};
 function panel(image,label,title){
  const figure=el('figure'),b=el('button','zoomTarget'),img=el('img');b.dataset.image=image;b.dataset.caption=title+' · '+label;b.setAttribute('aria-label','Увеличить: '+b.dataset.caption);img.src=image;img.alt=b.dataset.caption;b.append(img);figure.append(b,el('span','',label));return figure;
@@ -60,5 +73,20 @@ const frames=[['Revit','model','Модель территории'],['Карта
 [...$('frames').children].forEach((b,i)=>b.onclick=()=>{const [name,file,title]=frames[i],img=$('framePic');img.src='case/'+file+'.webp';img.alt=title;img.classList.remove('photoIn');void img.offsetWidth;img.classList.add('photoIn');$('frameZoom').dataset.image=img.getAttribute('src');$('frameZoom').dataset.caption=title;$('frameName').textContent=name;[...$('frames').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
 $('cut').oninput=e=>e.target.parentElement.style.setProperty('--cut',e.target.value+'%');
 $('largeCompare').onclick=()=>lightbox([{image:'case/concept-a.webp',caption:'Территория · вариант А'},{image:'case/concept-b.webp',caption:'Территория · вариант Б'}],0);
-document.querySelectorAll('.copyText').forEach(b=>b.onclick=async()=>{const p=$(b.dataset.copy),label=b.textContent;try{await navigator.clipboard.writeText(p.textContent);b.textContent='Скопировано';setTimeout(()=>b.textContent=label,1600);}catch{const r=document.createRange();r.selectNodeContents(p);getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='Текст выделен. Нажмите Ctrl+C';}});
+for (const rail of [$('formats'), $('programTabs')]) {
+ rail.addEventListener('click', event => {
+   const button=event.target.closest('button');
+   if(!button)return;
+   for(const item of rail.children) {
+     item.setAttribute('aria-pressed', String(item===button));
+     if(item.dataset.panel) $(item.dataset.panel).hidden = item !== button;
+   }
+   if(button.dataset.format) {
+     const square = button.dataset.format === 'square';
+     rail.closest('figure').classList.toggle('square',square);
+     $('cropLabel').textContent = square ? 'Видимая область квадрата' : 'Исходная панорама';
+   }
+ });
+}
+document.querySelectorAll('.copyText').forEach(b=>b.onclick=async()=>{const p=$(b.dataset.copy),label=b.textContent;const content=p.tagName==='DL'?[...p.querySelectorAll('dd')].map(d=>d.textContent).join(' '):p.textContent;try{await navigator.clipboard.writeText(content);b.textContent='Скопировано';setTimeout(()=>b.textContent=label,1600);}catch{const r=document.createRange();r.selectNodeContents(p);getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='Текст выделен. Нажмите Ctrl+C';}});
 

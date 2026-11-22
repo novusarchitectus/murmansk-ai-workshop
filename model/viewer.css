@@ -1,0 +1,21 @@
+.mur-model {
+  box-sizing:border-box; width:100%; min-width:0; overflow:hidden;
+  background:#f6f8fa; color:#23374b;
+  border:1px solid #d7e0e7; border-radius:var(--frame,20px);
+  box-shadow:var(--lift,0 12px 32px -20px #31455d66);
+}
+.mur-model-stage {position:relative;height:clamp(215px,43vh,520px);background:radial-gradient(ellipse at 45% 45%,#fff,#edf2f5)}
+.mur-model-stage canvas,.mur-model-poster {display:block;position:absolute;inset:0;width:100%;height:100%}
+.mur-model-poster {object-fit:contain}
+.mur-model-stage canvas {opacity:0;cursor:grab;touch-action:none}
+.mur-ready .mur-model-stage canvas {opacity:1}
+.mur-ready .mur-model-poster {visibility:hidden}
+.mur-model-stage canvas.grabbing {cursor:grabbing}
+.mur-model-stage canvas:focus-visible {outline:3px solid #648fb7;outline-offset:-4px}
+.mur-model-bar,.mur-model-tools {display:flex;align-items:center;gap:8px}
+.mur-model-bar {justify-content:space-between;flex-wrap:wrap;padding:10px 15px;border-top:1px solid #d7e0e7;background:#fff}
+.mur-model-hint {color:#536477;font-size:14px}
+.mur-model-tools button {background:#f4f7fb;border:1px solid #d7e0e7;padding:7px 12px;border-radius:22px;font:600 14px/1.25 Onest,"Segoe UI",sans-serif;color:#31597b;cursor:pointer}
+.mur-model-tools button:hover,.mur-model-tools button[aria-pressed=true] {background:#e3edf4}
+.mur-static .mur-model-tools,.mur-static canvas {display:none}
+@media(max-width:560px) {.mur-model-bar{padding:10px}.mur-model-hint{width:100%}.mur-model-stage{height:clamp(186px,30vh,280px)}}

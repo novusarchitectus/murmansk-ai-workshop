@@ -1,0 +1,80 @@
+.atlasView {height:clamp(220px,43vh,550px);background:white;padding:12px}
+.atlasView img {object-fit:contain}
+.workSource,.lessonCaption {color:var(--muted);font-size:13px;line-height:1.4}
+.lessonCaption {margin-top:12px}
+.gallery {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;flex-shrink:0}
+.folioTile {border:var(--edge);border-radius:16px;padding:0;text-align:left;display:grid;grid-template-rows:auto 1fr;overflow:hidden;background:var(--paper);box-shadow:0 4px 15px #253e580b}
+.folioTile:hover,.folioTile:focus-visible {border-color:#82a3bd;box-shadow:var(--lift)}
+.folioPreview {height:clamp(88px,18vh,220px);background:#e9edf1;display:block}
+.folioPreview img {width:100%;height:100%;object-fit:cover;display:block}
+.drawingTile {background:white}
+.drawingTile img {object-fit:contain}
+.folioCaption {padding:8px 13px 10px;display:grid;gap:2px}
+.folioCaption small,.detailHead>div>p {font:400 11px/1.5 var(--mono);color:var(--accent)}
+.folioCaption strong {font-size:clamp(15px,1.14vw,20px);line-height:1.2}
+#galleryDetail {width:min(1080px,95vw);max-height:94dvh;padding:clamp(14px,2.2vw,29px);border-radius:var(--frame);box-shadow:var(--lift)}
+.detailHead,.detailFoot,.detailNav,.promptBottom {display:flex;gap:14px;align-items:center;justify-content:space-between}
+.detailHead {margin-bottom:15px}.detailHead h2 {font-size:clamp(22px,2.4vw,35px);margin-top:4px}
+.detailHead .close,.detailNav button {flex-shrink:0}
+.detailFoot {margin-top:14px}.detailFoot p {font-size:15px;line-height:1.4}
+.detailNav {gap:7px}.detailNav button {width:36px;height:36px;border-radius:50%;border:var(--edge);background:#fff;font:24px/1 Arial}
+#detailPair .zoomTarget {height:clamp(190px,51vh,600px)}
+#detailPair .zoomTarget img {border-radius:0}
+.anchorBoard,.promptWorkbench {background:var(--paper);border:var(--edge);border-radius:var(--frame);overflow:hidden;box-shadow:var(--lift)}
+.anchorBoard {display:grid;grid-template-columns:minmax(0,1.35fr) minmax(295px,.85fr);align-items:stretch}
+.anchorPhotoColumn {min-width:0;background:#e9eef2;display:grid;place-items:center;overflow:hidden}
+.anchorPhoto {position:relative;width:min(100%,calc(53vh * 1920 / 1373));line-height:0}
+.anchorPhoto.quay {width:min(100%,calc(53vh * 1444 / 1284))}
+.anchorPhoto img {width:100%;height:auto;display:block}
+.anchorTools {padding:clamp(14px,1.4vw,23px);min-width:0;display:flex;flex-direction:column;justify-content:center}
+.anchorTools .tabRail,.promptWorkbench .tabRail {justify-content:flex-start;border-top:0}
+.anchorTools .tabRail {background:none;padding:0 0 8px;gap:5px}
+.anchorTools .tabRail button:not([aria-pressed=true]) {background:#f2f5f8}
+.anchorPin {position:absolute;transform:translate(-50%,-50%);height:30px;width:30px;padding:0;border-radius:50%;border:2px solid white;background:#1c3f54ed;color:white;font:700 12px/1 var(--mono);box-shadow:0 1px 6px #091e35a8;z-index:1}
+.anchorPin[aria-pressed=true] {color:#17332e;background:#bee6d1;z-index:2;box-shadow:0 0 0 4px #ffffff76,0 1px 6px #1631489c}
+.pinHint {position:absolute;pointer-events:none;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);white-space:nowrap;opacity:0;background:#fff;color:#193740;font:600 12px/1.3 var(--sans);border-radius:9px;padding:4px 7px;box-shadow:0 1px 5px #13263041}
+.anchorPin:hover .pinHint,.anchorPin:focus-visible .pinHint {opacity:1}
+.anchorPhrases {display:grid;gap:3px}
+.anchorPhrase {display:flex;align-items:center;gap:9px;text-align:left;border-radius:10px;padding:7px 8px;font-size:clamp(14px,1.02vw,18px);line-height:1.32}
+.phraseNumber {display:grid;place-items:center;flex-shrink:0;width:21px;height:21px;border-radius:50%;background:#edf1f4;font:400 11px/1 var(--mono)}
+.anchorPhrase[aria-pressed=true] {background:#eaf5ef;color:#154c36}
+.anchorPhrase[aria-pressed=true] .phraseNumber {background:#cee6d8}
+.anchorReadout {margin:11px 0 8px;padding-top:10px;border-top:var(--edge);min-height:77px}
+.anchorReadout strong {font-size:16px}.anchorReadout p {font-size:14px;line-height:1.38;margin:3px 0}
+.promptWorkbench {max-width:1100px;width:100%;margin:4px auto;flex:0 0 auto}
+.promptWorkbench .tabRail {padding:12px 18px;border-bottom:var(--edge)}
+.promptColumns {display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:clamp(13px,2vw,28px)}
+.promptPart {border-radius:14px;padding:clamp(14px,1.8vw,26px);background:#edf7f0;color:#185b3a}
+.promptPart.negative {background:#fcf0ee;color:#873a3b}
+.promptPart h3 {font:700 clamp(15px,1.22vw,21px)/1.4 var(--mono);margin:0 0 14px;letter-spacing:-.025em}
+.promptPart h3 span {font-size:1.15em}
+.promptPart p {font-size:clamp(16px,1.32vw,24px);line-height:1.5}
+.promptBottom {border-top:var(--edge);padding:12px clamp(13px,2vw,28px);align-items:center}
+.promptBottom .pill {flex-shrink:0}
+#model .mur-model {min-height:0}
+.lessonPair figure {background:#ebeff1}
+@media(min-width:1600px){.gallery{gap:18px}.folioCaption{padding:12px 16px}.anchorReadout p{font-size:17px}}
+@media(max-width:800px){
+  .gallery {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .folioPreview {height:clamp(86px,25vw,170px)}.folioCaption{padding:7px 9px}
+  .folioCaption small {font-size:10px}.folioCaption strong{font-size:14px}
+  .anchorBoard {grid-template-columns:1fr;flex-shrink:0}
+  .anchorPhoto,.anchorPhoto.quay {width:min(100%,450px)}
+  .anchorTools {padding:12px}.anchorReadout {min-height:0}
+  .promptColumns {grid-template-columns:1fr;gap:8px}.promptBottom {align-items:flex-start;flex-direction:column}
+  .promptPart h3 {margin-bottom:5px}.detailFoot {align-items:flex-start}
+  #detailPair {display:flex;flex-direction:column}
+  #detailPair .zoomTarget {height:23vh}
+  #detailPair.solo .zoomTarget {height:40vh}
+  #galleryDetail {padding:14px}.detailHead {gap:8px}
+  .atlasView {height:clamp(190px,35vh,320px)}
+  .lessonPair {grid-template-columns:1fr;flex:0 0 auto}.lessonPair .zoomTarget {height:clamp(150px,28vh,280px)}
+}
+@media(max-height:680px) and (min-width:801px){
+  .anchorPhoto {width:min(100%,calc(49vh * 1920 / 1373))}
+  .anchorTools{padding:9px 12px}.anchorPhrase{padding:4px 6px}.anchorReadout{min-height:0}
+  .folioPreview {height:13.5vh}.gallery{gap:7px}
+}
+@media(min-width:1000px) {
+  .gallery:has(.folioTile:nth-child(7)) {grid-template-columns:repeat(4,minmax(0,1fr))}
+}

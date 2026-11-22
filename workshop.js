@@ -18,9 +18,15 @@ document.querySelectorAll('dialog').forEach(d=>{d.querySelector('.close').onclic
 function fullPic(i){pictureIndex=i;const pic=pictures[i];$('fullImg').src=pic.image;$('fullImg').alt=pic.caption;$('fullCaption').textContent=pic.caption;$('imgPrev').disabled=i===0;$('imgNext').disabled=i===pictures.length-1;}
 function lightbox(group,ix){pictures=group;fullPic(ix);viewer.showModal();}
 $('imgPrev').onclick=()=>fullPic(Math.max(0,pictureIndex-1));$('imgNext').onclick=()=>fullPic(Math.min(pictures.length-1,pictureIndex+1));
-document.addEventListener('click',e=>{const b=e.target.closest('button[data-image]');if(!b)return;const siblings=[...b.closest('.slide').querySelectorAll('button[data-image]')];lightbox(siblings.map(x=>({image:x.dataset.image,caption:x.dataset.caption})),siblings.indexOf(b));});
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-image]');if(!b)return;const siblings=[...b.closest('.slide, dialog').querySelectorAll('button[data-image]')];lightbox(siblings.map(x=>({image:x.dataset.image,caption:x.dataset.caption})),siblings.indexOf(b));});
 document.addEventListener('keydown',e=>{
  if(viewer.open){if(e.key==='ArrowLeft')$('imgPrev').click();if(e.key==='ArrowRight')$('imgNext').click();return;}
+ if ($('galleryDetail').open) {
+   if(e.key==='ArrowLeft') $('detailPrev').click();
+   if(e.key==='ArrowRight') $('detailNext').click();
+   return;
+ }
+ if(e.defaultPrevented || e.target.closest('[data-mur-model]'))return;
  if(toc.open || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey)return;
  const off={ArrowRight:1,PageDown:1,ArrowLeft:-1,PageUp:-1};
  if(e.key in off || e.key==='Home'||e.key==='End'){e.preventDefault();show(e.key==='Home'?0:e.key==='End'?slides.length-1:active+off[e.key]);}
@@ -33,7 +39,7 @@ function advanceByWheel(d) {
  if(Math.abs(scrollAmount)>45){show(active+Math.sign(d));locked=true;scrollAmount=0;}
 }
 document.addEventListener('wheel',e=>{
- if(viewer.open||toc.open||e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
+ if(viewer.open||toc.open||$('galleryDetail').open||e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
  const d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
  for(let node=e.target;node&&node!==document.body;node=node.parentElement){if(node.scrollHeight>node.clientHeight+3 && ['auto','scroll'].includes(getComputedStyle(node).overflowY)&&((d>0&&node.scrollTop+node.clientHeight<node.scrollHeight-3)||(d<0&&node.scrollTop>2)))return;}
  e.preventDefault();advanceByWheel(d);
@@ -56,19 +62,6 @@ const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className
 function panel(image,label,title){
  const figure=el('figure'),b=el('button','zoomTarget'),img=el('img');b.dataset.image=image;b.dataset.caption=title+' · '+label;b.setAttribute('aria-label','Увеличить: '+b.dataset.caption);img.src=image;img.alt=b.dataset.caption;b.append(img);figure.append(b,el('span','',label));return figure;
 }
-document.querySelectorAll('.gallery').forEach(g=>{
- const items=window.MURMANSK_INTERIORS.filter(x=>x.group===g.dataset.group);const pair=el('div','pair'),bar=el('div','galleryBar'),description=el('div'),title=el('p','galleryLabel'),anchor=el('p','anchorText'),thumbs=el('div','thumbs');description.append(title,anchor);bar.append(description,thumbs);g.append(pair,bar);
- function render(i){const x=items[i];pair.replaceChildren();pair.classList.toggle('solo',!x.before);if(x.before)pair.append(panel(x.before,'Модель',x.title));pair.append(panel(x.after,x.before?'Визуализация':'Проектный вид',x.title));title.textContent=x.title;anchor.textContent=x.anchor;[...thumbs.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));}
- if(items.length>1)items.forEach((x,i)=>{const b=el('button'),img=el('img');b.setAttribute('aria-label',x.title);b.title=x.title;img.src=x.after;img.alt='';b.append(img);b.onclick=()=>render(i);thumbs.append(b);});
- render(0);
-});
-let stage=0;
-const walkthrough=[
- ['Вид из модели','interiors/north-model.webp','Найдите угол стеклянного объёма в кадре.','Показать якорь'],
- ['Словесный якорь','interiors/north-model.webp','«Сохрани положение угла остеклённого объёма справа».','Показать результат'],
- ['Визуализация','interiors/north-hall.webp','Сравните угол, вертикали колонн и верхнюю галерею с моделью.','Сначала']
-];
-$('stageNext').onclick=()=>{stage=(stage+1)%3;const [label,image,caption,action]=walkthrough[stage];$('stageType').textContent=label;$('studioImg').src=image;$('studioImg').alt=label;$('studioZoom').dataset.image=image;$('studioZoom').dataset.caption=label+' · Тёплый объём внутри цеха';$('stageCaption').textContent=caption;$('stageNext').textContent=action;$('anchorStudio').querySelectorAll('.callout,.pointer').forEach(n=>n.hidden=stage!==1);};
 const frames=[['Revit','model','Модель территории'],['Карта','satellite','Исходный вид сверху'],['Nano Banana Pro','existing','Визуальная реконструкция существующего состояния']];
 [...$('frames').children].forEach((b,i)=>b.onclick=()=>{const [name,file,title]=frames[i],img=$('framePic');img.src='case/'+file+'.webp';img.alt=title;img.classList.remove('photoIn');void img.offsetWidth;img.classList.add('photoIn');$('frameZoom').dataset.image=img.getAttribute('src');$('frameZoom').dataset.caption=title;$('frameName').textContent=name;[...$('frames').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
 $('cut').oninput=e=>e.target.parentElement.style.setProperty('--cut',e.target.value+'%');
